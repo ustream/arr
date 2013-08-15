@@ -1,0 +1,26 @@
+{
+    "name": "ustream/arr",
+    "description": "Ustream Array helpers",
+    "require": {
+        "php": ">=5.3,<5.5",
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ustream\\Arr": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Peter Wilcsinszky",
+            "email": "wilcsinszky.peter@ustream.tv"
+        },
+        {
+            "name": "Szabolcs Sulik",
+            "email": "sulik.szabolcs@ustream.tv"
+        }
+    ]
+}
