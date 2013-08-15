@@ -1,10 +1,18 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-use PHPUnit\Extensions\Mock\MockBuilder;
+
 use Ustream\Arr\CompositeExtractor;
+use Ustream\Arr\Extractor;
 use Ustream\Option\None;
+use Ustream\Option\Option;
 use Ustream\Option\Some;
 
 /**
@@ -21,12 +29,13 @@ class CompositeExtractorTest extends PHPUnit_Framework_TestCase
 		$firstResult = array('bar' => 'baz');
 		$secondResult = 'baz';
 
-		$firstExtractor = $this->extractor();
-		$firstExtractor->expectsMethodOnce('extract')->with($inputData)->willReturn(new Some($firstResult));
-		$secondExtractor = $this->extractor();
-		$secondExtractor->expectsMethodOnce('extract')->with($firstResult)->willReturn(new Some($secondResult));
-		$extractor = new CompositeExtractor($firstExtractor->mock, $secondExtractor->mock);
+		$firstExtractor = new TestExtractor($inputData, new Some($firstResult));
+		$secondExtractor = new TestExtractor($firstResult, new Some($secondResult));
+		$extractor = new CompositeExtractor($firstExtractor, $secondExtractor);
+
 		$this->assertEquals($secondResult, $extractor->extract($inputData)->getOrElse(null));
+		$firstExtractor->assertCalled();
+		$secondExtractor->assertCalled();
 	}
 
 	/**
@@ -34,27 +43,60 @@ class CompositeExtractorTest extends PHPUnit_Framework_TestCase
 	 */
 	public function shouldReturnNoneIfAnyExtractorReturnsNone()
 	{
-		$firstExtractor = $this->extractor();
-		$firstExtractor->expectsAny('extract')->willReturn(None::create());
-		$secondExtractor = $this->extractor();
-		$secondExtractor->expectNoMethodCalls();
-		$extractor = new CompositeExtractor($firstExtractor->mock, $secondExtractor->mock);
-		$extractor->extract(array());
+		$firstExtractor = new TestExtractor($this->anything(), None::create());
+		$secondExtractor = new TestExtractor($this->anything(), null);
+		$extractor = new CompositeExtractor($firstExtractor, $secondExtractor);
 
+		$this->assertEquals(None::create(), $extractor->extract(array()));
+		$firstExtractor->assertCalled();
+		$secondExtractor->assertNotCalled();
 
-		$firstExtractor = $this->extractor();
-		$firstExtractor->expectsAny('extract')->willReturn(new Some(array()));
-		$secondExtractor = $this->extractor();
-		$secondExtractor->expectsAny('extract')->willReturn(None::create());
-		$extractor = new CompositeExtractor($firstExtractor->mock, $secondExtractor->mock);
-		$extractor->extract(array());
+		$firstExtractor = new TestExtractor($this->anything(), new Some(array()));
+		$secondExtractor = new TestExtractor($this->anything(), None::create());
+		$extractor = new CompositeExtractor($firstExtractor, $secondExtractor);
+
+		$this->assertEquals(None::create(), $extractor->extract(array()));
+		$firstExtractor->assertCalled();
+		$secondExtractor->assertCalled();
+	}
+}
+
+class TestExtractor implements Extractor
+{
+	private $input, $output;
+	private $called = false;
+
+	/**
+	 * @param mixed $input
+	 * @param mixed $output
+	 */
+	public function __construct($input, $output)
+	{
+		$this->input = $input;
+		$this->output = $output;
 	}
 
 	/**
-	 * @return \PHPUnit\Extensions\Mock\MockObjectWrapper
+	 * @param array $data
+	 * @return Option
 	 */
-	private function extractor()
+	public function extract($data)
 	{
-		return MockBuilder::create($this, 'Ustream\Arr\Extractor')->build();
+		$expected = $this->input instanceof PHPUnit_Framework_Constraint
+			? $this->input
+			: new PHPUnit_Framework_Constraint_IsEqual($this->input);
+		PHPUnit_Framework_Assert::assertThat($data, $expected);
+		$this->called = true;
+		return $this->output;
+	}
+
+	public function assertCalled()
+	{
+		PHPUnit_Framework_Assert::assertTrue($this->called);
+	}
+
+	public function assertNotCalled()
+	{
+		PHPUnit_Framework_Assert::assertFalse($this->called);
 	}
 }

@@ -1,9 +1,14 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-use PHPUnit\Extensions\Mock\MockBuilder;
-use Ustream\Arr\Extractor;
+
 use Ustream\Arr\ExtractorUtils as E;
 use Ustream\Arr\ListExtractor;
 use Ustream\Arr\PathExtractor;
@@ -41,8 +46,8 @@ class ListExtractorTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @param Extractor $extractor
-	 * @param string    $expected
+	 * @param ListExtractor $extractor
+	 * @param string $expected
 	 */
 	private function assertExtracts($extractor, $expected)
 	{

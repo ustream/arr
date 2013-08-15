@@ -1,11 +1,17 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 use Ustream\Arr\Extractor;
 use Ustream\Arr\ExtractorUtils as E;
 use Ustream\Arr\MultiPathExtractor;
-use Ustream\Arr\PathExtractor;
 
 /**
  * Holds the MultiPathExtractorTest class

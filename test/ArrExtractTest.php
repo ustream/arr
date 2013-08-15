@@ -14,8 +14,8 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 	 */
 	public function invalidInput()
 	{
-		$this->setExpectedException('NotFound_Exception');
-		Arr::extract(null, 'asdf')->getOrThrow(new NotFound_Exception);
+		$this->setExpectedException('RuntimeException');
+		Arr::extract(null, 'asdf')->getOrThrow(new RuntimeException);
 	}
 
 	/**
@@ -23,7 +23,7 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 	 */
 	public function extractFirstLevel()
 	{
-		$this->assertSame(123, Arr::extract(array('asd' => 123), 'asd')->getOrThrow(new NotFound_Exception));
+		$this->assertSame(123, Arr::extract(array('asd' => 123), 'asd')->getOrThrow(new RuntimeException));
 	}
 
 	/**
@@ -31,8 +31,8 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 	 */
 	public function notFoundFirstLevel()
 	{
-		$this->setExpectedException('NotFound_Exception');
-		Arr::extract(array('asd' => 123), 'asdf')->getOrThrow(new NotFound_Exception);
+		$this->setExpectedException('RuntimeException');
+		Arr::extract(array('asd' => 123), 'asdf')->getOrThrow(new RuntimeException);
 	}
 
 	/**
@@ -46,7 +46,7 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 					'mmfs9' => 87681
 				)
 			)
-		), 'asd.lksd.mmfs9')->getOrElse(function () { throw new NotFound_Exception; }));
+		), 'asd.lksd.mmfs9')->getOrElse(function () { throw new RuntimeException; }));
 	}
 
 	/**
@@ -54,14 +54,14 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 	 */
 	public function notDeepEnough()
 	{
-		$this->setExpectedException('NotFound_Exception');
+		$this->setExpectedException('RuntimeException');
 		Arr::extract(
 			array(
 				'asd' => array(
 					'lksd' => 1
 				)
 			),'asd.lksd.mmfs9'
-		)->getOrThrow(new NotFound_Exception());
+		)->getOrThrow(new RuntimeException());
 	}
 
 	/**
@@ -69,14 +69,14 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
 	 */
 	public function invalidKey()
 	{
-		$this->setExpectedException('NotFound_Exception');
+		$this->setExpectedException('RuntimeException');
 		$this->assertSame(87681, Arr::extract(array(
 			'asd' => array(
 				'lksd' => array(
 					'mmfs9' => 87681
 				)
 			)
-		), null)->getOrElse(function () { throw new NotFound_Exception; }));
+		), null)->getOrElse(function () { throw new RuntimeException; }));
 	}
 }
 

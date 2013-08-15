@@ -1,6 +1,12 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Ustream\Arr;
@@ -48,11 +54,12 @@ class ListExtractor implements Extractor
 				$result[] = $r;
 			}
 		}
-		return $result ? new Some($this->process(array_values($result))) : None::create();
+		return $result ? new Some($this->process($result)) : None::create();
 	}
 
 	private function process($result)
 	{
+		$result = array_values($result);
 		if ($this->flat && is_array($result[0])) {
 			return call_user_func_array('array_merge', $result);
 		} else {

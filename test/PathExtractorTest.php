@@ -1,7 +1,14 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
 use Ustream\Arr\Extractor;
 use Ustream\Arr\PathExtractor;
 
@@ -39,5 +46,82 @@ class PathExtractorTest extends PHPUnit_Framework_TestCase
 			'baz' => 'something',
 		);
 		$this->assertEquals($expected, $extractor->extract($sample)->getOrElse(null));
+	}
+
+	/**
+	 * @test
+	 */
+	public function invalidInput()
+	{
+		$this->setExpectedException('RuntimeException');
+		$extractor = new PathExtractor('asdf');
+		$extractor->extract(null)->getOrThrow(new RuntimeException);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractFirstLevel()
+	{
+		$extractor = new PathExtractor('asd');
+		$this->assertSame(123, $extractor->extract(array('asd' => 123))->getOrThrow(new RuntimeException));
+	}
+
+	/**
+	 * @test
+	 */
+	public function notFoundFirstLevel()
+	{
+		$this->setExpectedException('RuntimeException');
+		$extractor = new PathExtractor('asdf');
+		$extractor->extract(array('asd' => 123))->getOrThrow(new RuntimeException);
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractDeeper()
+	{
+		$data = array(
+			'asd' => array(
+				'lksd' => array(
+					'mmfs9' => 87681
+				)
+			)
+		);
+		$extractor = new PathExtractor('asd.lksd.mmfs9');
+		$this->assertSame(87681, $extractor->extract($data)->getOrElse(function () { throw new RuntimeException; }));
+	}
+
+	/**
+	 * @test
+	 */
+	public function notDeepEnough()
+	{
+		$this->setExpectedException('RuntimeException');
+		$data = array(
+			'asd' => array(
+				'lksd' => 1
+			)
+		);
+		$extractor = new PathExtractor('asd.lksd.mmfs9');
+		$extractor->extract($data)->getOrThrow(new RuntimeException());
+	}
+
+	/**
+	 * @test
+	 */
+	public function invalidKey()
+	{
+		$this->setExpectedException('RuntimeException');
+		$data = array(
+			'asd' => array(
+				'lksd' => array(
+					'mmfs9' => 87681
+				)
+			)
+		);
+		$extractor = new PathExtractor(null);
+		$extractor->extract($data)->getOrElse(function () { throw new RuntimeException; });
 	}
 }
