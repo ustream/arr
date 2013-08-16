@@ -7,7 +7,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.3.0",
-        "ustream/option": "1.0.*@dev"
+        "ustream/option": "~0.1.0"
     },
     "autoload": {
         "psr-0": {"Ustream\\Arr": "src/"}
