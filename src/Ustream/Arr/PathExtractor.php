@@ -58,7 +58,7 @@ class PathExtractor implements Extractor
         $key = array_shift($path);
         if (!array_key_exists($key, $data)) {
             return None::create();
-        } else if ($path) {
+        } elseif ($path) {
             return $this->extractInner($path, $data[$key]);
         } else {
             return new Some($data[$key]);

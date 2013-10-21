@@ -24,10 +24,12 @@ class MultiPathExtractorTest extends PHPUnit_Framework_TestCase
      */
     public function shouldExtractAllFieldPathPairsFromDataMap()
     {
-        $extractor = new MultiPathExtractor(array(
-            'a' => E::path('baz'),
-            'b' => E::path('foo', 'bar'),
-        ));
+        $extractor = new MultiPathExtractor(
+            array(
+                'a' => E::path('baz'),
+                'b' => E::path('foo', 'bar'),
+            )
+        );
         $this->assertExtracts($extractor, array('a' => 'something', 'b' => 'result'));
     }
 
@@ -36,10 +38,12 @@ class MultiPathExtractorTest extends PHPUnit_Framework_TestCase
      */
     public function shouldReturnNoneWhenAnyFieldIsUnextractable()
     {
-        $extractor = new MultiPathExtractor(array(
-            'a' => E::path('baz'),
-            'b' => E::path('unextractable'),
-        ));
+        $extractor = new MultiPathExtractor(
+            array(
+                'a' => E::path('baz'),
+                'b' => E::path('unextractable'),
+            )
+        );
         $this->assertThat($extractor->extract($this->sample), $this->isInstanceOf('Ustream\Option\None'));
     }
 

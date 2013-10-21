@@ -10,6 +10,7 @@
  */
 
 namespace Ustream\Arr;
+
 use PHPUnit_Framework_TestCase;
 use RuntimeException;
 
@@ -91,9 +92,7 @@ class PathExtractorTest extends PHPUnit_Framework_TestCase
             )
         );
         $extractor = new PathExtractor('asd.lksd.mmfs9');
-        $this->assertSame(87681, $extractor->extract($data)->getOrElse(function () {
-            throw new RuntimeException;
-        }));
+        $this->assertSame(87681, $extractor->extract($data)->getOrElse(null));
     }
 
     /**
@@ -125,8 +124,6 @@ class PathExtractorTest extends PHPUnit_Framework_TestCase
             )
         );
         $extractor = new PathExtractor(null);
-        $extractor->extract($data)->getOrElse(function () {
-            throw new RuntimeException;
-        });
+        $extractor->extract($data)->getOrThrow(new RuntimeException);
     }
 }

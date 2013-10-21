@@ -11,6 +11,7 @@
 
 namespace Ustream\Arr;
 
+use Exception;
 use PHPUnit_Framework_TestCase;
 use Ustream\Option\Some;
 use Ustream\Option\None;
@@ -32,9 +33,15 @@ class ArrMapTest extends PHPUnit_Framework_TestCase
      */
     public function mapEmptyOrInvalidToNone($empty)
     {
-        $this->assertEquals(new None(), Arr::map($empty, function ($item) {
-            throw new Exception;
-        }));
+        $this->assertEquals(
+            None::create(),
+            Arr::map(
+                $empty,
+                function ($item) {
+                    throw new Exception;
+                }
+            )
+        );
     }
 
     /**

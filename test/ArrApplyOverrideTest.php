@@ -45,11 +45,15 @@ class ArrApplyOverrideTest extends PHPUnit_Framework_TestCase
     public function testInvalidAttempt()
     {
         $this->setExpectedException('\InvalidArgumentException');
-        Arr::applyOverride(array(
-            'a',
-            'b',
-            'c'
-        ), array('#[1=2]'), 'asd');
+        Arr::applyOverride(
+            array(
+                'a',
+                'b',
+                'c'
+            ),
+            array('#[1=2]'),
+            'asd'
+        );
     }
 
     /**

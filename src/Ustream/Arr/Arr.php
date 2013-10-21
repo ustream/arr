@@ -127,7 +127,8 @@ class Arr
                 $matcher = function ($value) use ($matcherKey, $matcherVal) {
                     return is_array($value) && isset($value[$matcherKey]) && $value[$matcherKey] == $matcherVal;
                 };
-                $key = self::findKey($baseOnCurrentLevel, $matcher)->getOrThrow(new InvalidArgumentException('Cannot found matching list item for ' . $key));
+                $error = new InvalidArgumentException('Cannot found matching list item for ' . $key);
+                $key = self::findKey($baseOnCurrentLevel, $matcher)->getOrThrow($error);
             } else {
                 throw new InvalidArgumentException('Cannot found matching list item for ' . $key);
             }

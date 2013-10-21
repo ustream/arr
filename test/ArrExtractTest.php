@@ -50,15 +50,20 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
      */
     public function extractDeeper()
     {
-        $this->assertSame(87681, Arr::extract(array(
-            'asd' => array(
-                'lksd' => array(
-                    'mmfs9' => 87681
-                )
-            )
-        ), 'asd.lksd.mmfs9')->getOrElse(function () {
-                throw new RuntimeException;
-            }));
+        $expected = 87681;
+        $this->assertSame(
+            $expected,
+            Arr::extract(
+                array(
+                    'asd' => array(
+                        'lksd' => array(
+                            'mmfs9' => $expected
+                        )
+                    )
+                ),
+                'asd.lksd.mmfs9'
+            )->getOrElse(null)
+        );
     }
 
     /**
@@ -72,7 +77,8 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
                 'asd' => array(
                     'lksd' => 1
                 )
-            ), 'asd.lksd.mmfs9'
+            ),
+            'asd.lksd.mmfs9'
         )->getOrThrow(new RuntimeException());
     }
 
@@ -82,14 +88,15 @@ class ArrExtractTest extends PHPUnit_Framework_TestCase
     public function invalidKey()
     {
         $this->setExpectedException('RuntimeException');
-        $this->assertSame(87681, Arr::extract(array(
-            'asd' => array(
-                'lksd' => array(
-                    'mmfs9' => 87681
+        Arr::extract(
+            array(
+                'asd' => array(
+                    'lksd' => array(
+                        'mmfs9' => 87681
+                    )
                 )
-            )
-        ), null)->getOrElse(function () {
-                throw new RuntimeException;
-            }));
+            ),
+            null
+        )->getOrThrow(new RuntimeException);
     }
 }
