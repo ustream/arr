@@ -1,75 +1,88 @@
 <?php
 /**
+ * This file is part of the Arr package.
+ *
+ * @copyright Ustream Inc.
  * @author blerou <sulik.szabolcs@ustream.tv>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
-use Ustream\Arr\Arr;
 
-/**
- * ArrFilterSliceTest
- */
+namespace Ustream\Arr;
+
+use PHPUnit_Framework_TestCase;
+
 class ArrFilterSliceTest extends PHPUnit_Framework_TestCase
 {
-	/**
-	 * @test
-	 */
-	public function whenExactParamsGivenThenWorksProperly()
-	{
-		$ary = range(1, 10);
-		$filter = function ($n) { return $n > 3; };
-		$offset = 0;
-		$length = 3;
+    /**
+     * @test
+     */
+    public function whenExactParamsGivenThenWorksProperly()
+    {
+        $ary = range(1, 10);
+        $filter = function ($n) {
+            return $n > 3;
+        };
+        $offset = 0;
+        $length = 3;
 
-		$result = Arr::filterSlice($ary, $filter, $offset, $length);
-		$expected = array(4,5,6);
+        $result = Arr::filterSlice($ary, $filter, $offset, $length);
+        $expected = array(4, 5, 6);
 
-		$this->assertThat($result, $this->isInstanceOf('Ustream\Option\Some'));
-		$this->assertEquals($expected, $result->getOrElse(array()));
-	}
+        $this->assertThat($result, $this->isInstanceOf('Ustream\Option\Some'));
+        $this->assertEquals($expected, $result->getOrElse(array()));
+    }
 
-	/**
-	 * @test
-	 */
-	public function whenLengthIsNullThenWorksProperly()
-	{
-		$ary = range(1, 10);
-		$filter = function ($n) { return $n > 3; };
-		$offset = 0;
+    /**
+     * @test
+     */
+    public function whenLengthIsNullThenWorksProperly()
+    {
+        $ary = range(1, 10);
+        $filter = function ($n) {
+            return $n > 3;
+        };
+        $offset = 0;
 
-		$result = Arr::filterSlice($ary, $filter, $offset);
-		$expected = array(4,5,6,7,8,9,10);
+        $result = Arr::filterSlice($ary, $filter, $offset);
+        $expected = array(4, 5, 6, 7, 8, 9, 10);
 
-		$this->assertEquals($expected, $result->getOrElse(array()));
-	}
+        $this->assertEquals($expected, $result->getOrElse(array()));
+    }
 
-	/**
-	 * @test
-	 */
-	public function whenOffsetGivenThenWorksProperly()
-	{
-		$ary = range(1, 20);
-		$filter = function ($n) { return $n % 2 == 0; };
-		$offset = 3;
-		$length = 3;
+    /**
+     * @test
+     */
+    public function whenOffsetGivenThenWorksProperly()
+    {
+        $ary = range(1, 20);
+        $filter = function ($n) {
+            return $n % 2 == 0;
+        };
+        $offset = 3;
+        $length = 3;
 
-		$result = Arr::filterSlice($ary, $filter, $offset, $length);
-		$expected = array(8,10,12);
+        $result = Arr::filterSlice($ary, $filter, $offset, $length);
+        $expected = array(8, 10, 12);
 
-		$this->assertEquals($expected, $result->getOrElse(array()));
-	}
+        $this->assertEquals($expected, $result->getOrElse(array()));
+    }
 
-	/**
-	 * @test
-	 */
-	public function whenNoResultFoundReturnsANone()
-	{
-		$ary = range(1, 10);
-		$filter = function ($n) { return $n > 30; };
+    /**
+     * @test
+     */
+    public function whenNoResultFoundReturnsANone()
+    {
+        $ary = range(1, 10);
+        $filter = function ($n) {
+            return $n > 30;
+        };
 
-		$result = Arr::filterSlice($ary, $filter);
-		$expected = 'this-is-the-expected';
+        $result = Arr::filterSlice($ary, $filter);
+        $expected = 'this-is-the-expected';
 
-		$this->assertThat($result, $this->isInstanceOf('Ustream\Option\None'));
-		$this->assertEquals($expected, $result->getOrElse($expected));
-	}
+        $this->assertThat($result, $this->isInstanceOf('Ustream\Option\None'));
+        $this->assertEquals($expected, $result->getOrElse($expected));
+    }
 }
-?>

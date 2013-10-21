@@ -18,34 +18,37 @@ use Ustream\Option\Option;
  */
 class CompositeExtractor implements Extractor
 {
-	/**
-	 * @var Extractor
-	 */
-	private $firstExtractor;
+    /**
+     * @var Extractor
+     */
+    private $firstExtractor;
 
-	/**
-	 * @var Extractor
-	 */
-	private $secondExtractor;
+    /**
+     * @var Extractor
+     */
+    private $secondExtractor;
 
-	/**
-	 * @param Extractor $firstExtractor
-	 * @param Extractor $secondExtractor
-	 */
-	public function __construct($firstExtractor, $secondExtractor)
-	{
-		$this->firstExtractor = $firstExtractor;
-		$this->secondExtractor = $secondExtractor;
-	}
+    /**
+     * @param Extractor $firstExtractor
+     * @param Extractor $secondExtractor
+     */
+    public function __construct($firstExtractor, $secondExtractor)
+    {
+        $this->firstExtractor = $firstExtractor;
+        $this->secondExtractor = $secondExtractor;
+    }
 
-	/**
-	 * @param array $data
-	 * @return Option
-	 */
-	public function extract($data)
-	{
-		$secondExtractor = $this->secondExtractor;
-		return $this->firstExtractor->extract($data)->apply(
-			function($firstResult) use($secondExtractor) { return $secondExtractor->extract($firstResult); });
-	}
+    /**
+     * @param array $data
+     * @return Option
+     */
+    public function extract($data)
+    {
+        $secondExtractor = $this->secondExtractor;
+        return $this->firstExtractor->extract($data)->apply(
+            function ($firstResult) use ($secondExtractor) {
+                return $secondExtractor->extract($firstResult);
+            }
+        );
+    }
 }

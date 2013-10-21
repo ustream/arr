@@ -18,9 +18,9 @@ use Ustream\Option\Option;
  */
 interface Extractor
 {
-	/**
-	 * @param array $data
-	 * @return Option
-	 */
-	public function extract($data);
+    /**
+     * @param array $data
+     * @return Option
+     */
+    public function extract($data);
 }

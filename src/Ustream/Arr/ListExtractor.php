@@ -20,50 +20,50 @@ use Ustream\Option\Some;
  */
 class ListExtractor implements Extractor
 {
-	/**
-	 * @var Extractor
-	 */
-	private $innerExtractor;
+    /**
+     * @var Extractor
+     */
+    private $innerExtractor;
 
-	/**
-	 * @var bool
-	 */
-	private $flat;
+    /**
+     * @var bool
+     */
+    private $flat;
 
-	/**
-	 * @param Extractor $innerExtractor
-	 * @param bool      $flat
-	 * @return ListExtractor
-	 */
-	public function __construct($innerExtractor, $flat=false)
-	{
-		$this->innerExtractor = $innerExtractor;
-		$this->flat = $flat;
-	}
+    /**
+     * @param Extractor $innerExtractor
+     * @param bool $flat
+     * @return ListExtractor
+     */
+    public function __construct($innerExtractor, $flat = false)
+    {
+        $this->innerExtractor = $innerExtractor;
+        $this->flat = $flat;
+    }
 
-	/**
-	 * @param array $data
-	 * @return Option
-	 */
-	public function extract($data)
-	{
-		$result = array();
-		foreach ($data as $row) {
-			$r = $this->innerExtractor->extract($row)->getOrElse(null);
-			if ($r !== null) {
-				$result[] = $r;
-			}
-		}
-		return $result ? new Some($this->process($result)) : None::create();
-	}
+    /**
+     * @param array $data
+     * @return Option
+     */
+    public function extract($data)
+    {
+        $result = array();
+        foreach ($data as $row) {
+            $r = $this->innerExtractor->extract($row)->getOrElse(null);
+            if ($r !== null) {
+                $result[] = $r;
+            }
+        }
+        return $result ? new Some($this->process($result)) : None::create();
+    }
 
-	private function process($result)
-	{
-		$result = array_values($result);
-		if ($this->flat && is_array($result[0])) {
-			return call_user_func_array('array_merge', $result);
-		} else {
-			return $result;
-		}
-	}
+    private function process($result)
+    {
+        $result = array_values($result);
+        if ($this->flat && is_array($result[0])) {
+            return call_user_func_array('array_merge', $result);
+        } else {
+            return $result;
+        }
+    }
 }

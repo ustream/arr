@@ -21,32 +21,33 @@ use Ustream\Option\Some;
  */
 class MultiPathExtractor implements Extractor
 {
-	/**
-	 * @var Extractor[]
-	 */
-	private $extractors;
+    /**
+     * @var Extractor[]
+     */
+    private $extractors;
 
-	/**
-	 * @param Extractor[] $extractors
-	 */
-	public function __construct($extractors)
-	{
-		$this->extractors = $extractors;
-	}
+    /**
+     * @param Extractor[] $extractors
+     */
+    public function __construct($extractors)
+    {
+        $this->extractors = $extractors;
+    }
 
-	/**
-	 * @param array $data
-	 * @return Option
-	 */
-	public function extract($data)
-	{
-		try {
-			$result = array();
-			foreach ($this->extractors as $field => $extractor)
-				$result[$field] = $extractor->extract($data)->getOrThrow(new InvalidArgumentException());
-			return new Some($result);
-		} catch (InvalidArgumentException $e) {
-			return None::create();
-		}
-	}
+    /**
+     * @param array $data
+     * @return Option
+     */
+    public function extract($data)
+    {
+        try {
+            $result = array();
+            foreach ($this->extractors as $field => $extractor) {
+                $result[$field] = $extractor->extract($data)->getOrThrow(new InvalidArgumentException());
+            }
+            return new Some($result);
+        } catch (InvalidArgumentException $e) {
+            return None::create();
+        }
+    }
 }
